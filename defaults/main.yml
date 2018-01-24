@@ -1,0 +1,30 @@
+---
+ls_version_lock: false
+ls_use_repository: true
+ls_filter_fileglob: "templates/conf.d/*.conf.j2"
+ls_patterns_fileglob: false
+ls_start_service: true
+ls_java_install: true
+ls_restart_on_change: true
+ls_user: logstash
+ls_group: logstash
+ls_config: {}
+ls_config_log4j2: log4j2.properties.j2
+update_java: false
+ls_plugins: false
+ls_max_open_files: 16384
+ls_nicenest: 19
+ls_enable_xpack: false
+ls_plugins_reinstall: false
+
+# Default values required by Ansible
+ls_pid_dir: "/var/run/logstash"
+ls_data_dir: "/var/lib/logstash"
+ls_log_dir: "/var/log/logstash"
+conf_exist: false
+
+# These variables are used for internal operations performed by ansible.
+#  e.g.: If is instance already running after restart
+# They do not affect the current configuration
+ls_api_host: "localhost"
+ls_api_port: 5601

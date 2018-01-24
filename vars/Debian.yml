@@ -1,0 +1,3 @@
+---
+java: "{% if ls_java is defined %}{{ls_java}}{% else %}openjdk-8-jre-headless{% endif %}"
+ls_home: "/usr/share/logstash"

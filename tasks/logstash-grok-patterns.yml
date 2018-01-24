@@ -1,0 +1,15 @@
+---
+# Create required directories
+- name: Create Directories
+  become: yes
+  file: path={{ item }} state=directory owner={{ ls_user }} group={{ ls_group }}
+  with_items:
+    - "{{ patterns_dir }}"
+
+# Copy the instance specific patterns files
+- name: Copy Patterns Files for Instance
+  become: yes
+  copy: src={{ item }} dest={{ patterns_dir }} mode=0755 force=yes
+  with_fileglob:
+   - "{{ ls_patterns_fileglob | default('') }}"
+  notify: restart logstash

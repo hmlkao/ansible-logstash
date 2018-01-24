@@ -1,0 +1,110 @@
+---
+# Configure Logstash Node
+
+# Create required directories
+- name: Create Directories
+  become: yes
+  file: path={{ item }} state=directory owner={{ ls_user }} group={{ ls_group }}
+  with_items:
+    - "{{ pid_dir }}"
+    - "{{ log_dir }}"
+    - "{{ conf_dir }}"
+    - "{{ data_dir }}"
+
+# Copy the config template
+- name: Copy Configuration File
+  become: yes
+  template: src=logstash.yml.j2 dest={{ conf_dir }}/logstash.yml owner={{ ls_user }} group={{ ls_group }} mode=0644 force=yes
+  register: system_change
+  notify: restart logstash
+
+# Copy the instance specific default file
+- name: Copy Default File for Instance
+  become: yes
+  template: src=logstash.j2 dest={{ instance_default_file }} mode=0644 force=yes
+  notify: restart logstash
+
+# Copy the instance specific init file
+- name: Copy Debian Init File for Instance
+  become: yes
+  template: src=init/debian/logstash.j2 dest={{ instance_init_script }} mode=0755 force=yes
+  when: ansible_os_family == 'Debian' and not use_system_d
+  notify: restart logstash
+
+# Copy the instance specific init file
+- name: Copy Redhat Init File for Instance
+  become: yes
+  template: src=init/redhat/logstash.j2 dest={{ instance_init_script }} mode=0755 force=yes
+  when: ansible_os_family == 'RedHat' and not use_system_d
+  notify: restart logstash
+
+# Copy the instance specific filter files
+- name: Copy Filter Files for Instance
+  become: yes
+  template: src={{ item }} dest={{ conf_dir }}/conf.d/{{ item | basename | regex_replace('\.j2','') }} mode=0755 force=yes
+  with_fileglob:
+   - "{{ ls_filter_fileglob }}"
+  notify: restart logstash
+
+# Copy the systemd specific file if systemd is installed
+- name: Copy Systemd File for Instance
+  become: yes
+  template: src=systemd/logstash.j2 dest={{ instance_sysd_script }} mode=0644 force=yes
+  when: use_system_d
+  notify:
+  - reload systemd configuration
+  - restart logstash
+
+# Copy the logging.yml
+- name: Copy log4j2.properties File for Instance
+  become: yes
+  template: src={{ ls_config_log4j2 }} dest={{ conf_dir }}/log4j2.properties owner={{ ls_user }} group={{ ls_group }} mode=0644 force=yes
+  notify: restart logstash
+
+- name: Copy jvm.options File for Instance
+  become: yes
+  template: src=jvm.options.j2 dest={{ conf_dir }}/jvm.options owner={{ ls_user }} group={{ ls_group }} mode=0644 force=yes
+  notify: restart logstash
+
+# Clean up un-wanted package scripts to avoid confusion
+- name: Delete Default Init
+  become: yes
+  file: dest=/etc/init.d/logstash state=absent
+
+- name: Delete Default Environment File
+  become: yes
+  file: dest=/etc/default/logstash state=absent
+  when: ansible_os_family == 'Debian'
+
+- name: Delete Default Environment File
+  become: yes
+  file: dest=/etc/sysconfig/logstash state=absent
+  when: ansible_os_family == 'RedHat'
+
+- name: Delete Default Sysconfig File
+  become: yes
+  file: dest="{{ sysd_script }}" state=absent
+
+- name: Delete Default Configuration File
+  become: yes
+  file: dest=/etc/logstash/logstash.yml state=absent
+
+- name: Delete Default Logging File
+  become: yes
+  file: dest=/etc/logstash/logging.yml state=absent
+
+- name: Delete Default Logging File
+  become: yes
+  file: dest=/etc/logstash/log4j2.properties state=absent
+
+- name: Delete Default JVM Options File
+  become: yes
+  file: dest=/etc/logstash/jvm.options state=absent
+
+- name: Delete Default Startup File
+  become: yes
+  file: dest=/etc/logstash/startup.options state=absent
+
+- name: Delete Default Config Dir
+  become: yes
+  file: dest=/etc/logstash/conf.d state=absent

@@ -1,0 +1,7 @@
+---
+elastic_major_version: "5.x"
+elastic_gpg_key: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+ls_package_url: "https://artifacts.elastic.co/downloads/logstash/logstash"
+ls_conf_dir: "/etc/logstash"
+sysd_script: "/usr/lib/systemd/system/logstash.service"
+init_script: "/etc/init.d/logstash"
