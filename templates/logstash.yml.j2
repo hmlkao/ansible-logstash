@@ -9,12 +9,6 @@ node.name: {{ inventory_hostname }}-{{ ls_instance_name }}
 
 #################################### Paths #####################################
 
-{% if ls_config['path.data'] is not defined %}
 path.data: {{ data_dir }}
-{% endif %}
-{% if ls_config['path.config'] is not defined %}
 path.config: {{ conf_dir }}/conf.d
-{% endif %}
-{% if ls_config['path.logs'] is not defined %}
 path.logs: {{ log_dir }}
-{% endif %}

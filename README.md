@@ -4,7 +4,7 @@ Tested platforms are:
 * CentOS 7
 Ansible version >= 2.4 must be used.
 
-This role is based on [official Elastic Ansible role for Elasticsearch](https://github.com/elastic/ansible-elasticsearch)
+This role is based on [official Elastic Ansible role for Elasticsearch](https://github.com/elastic/ansible-elasticsearch) (exactly commit 7714c925e06e8538a09b6e9d8c1bd074813e9639)
 
 ## Usage
 Create your Ansible playbook with your own tasks and include role logstash. You will have to have this repository accessible within the context of playbook, e.g.
@@ -88,7 +88,9 @@ The second instance "testing" will listen on all interfaces with X-pack disabled
 ## Role variables
 `elastic_version`         (5.6.5) Version of Logstash which will be installed
 
-`ls_config`               ({}) Variables from [Logstash configuration](https://www.elastic.co/guide/en/logstash/current/logstash-settings-file.html)
+`ls_config`               ({}) Variables from [Logstash configuration](https://www.elastic.co/guide/en/logstash/current/logstash-settings-file.html) (Paths path.data, path.config and path.logs should not be set, these are generated per instance - path.data can be affected by `ls_data_dir`)
+
+`ls_data_dir`             (/var/lib/logstash) Path to Logstash data, default path for instance will be /var/lib/logstash/{{ hostname }}-{{ ls_instance_name }}/
 
 `ls_filter_fileglob`      (templates/conf.d/*.conf.j2) Templates of [Logstash config files](https://www.elastic.co/guide/en/logstash/current/configuration-file-structure.html), at least one file **is required**
 
