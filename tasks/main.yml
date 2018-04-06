@@ -41,18 +41,3 @@
 - name: Make sure Logstash is started
   service: name={{ instance_init_script | basename }} state=started enabled=yes
   when: ls_start_service
-
-- name: Wait for Logstash to startup
-  wait_for: host={{ ls_api_host }} port={{ ls_api_port }} delay=5 connect_timeout=1
-  when: ls_restarted is defined and ls_restarted.changed and ls_start_service
-
-- set_fact: manage_native_realm=false
-
-- set_fact: manage_native_realm=true
-  when: ls_start_service and ls_enable_xpack and ((ls_users is defined and ls_users.native is defined) or (ls_roles is defined and ls_roles.native is defined))
-
-# If playbook runs too fast, Native commands could fail as the Native Realm is not yet up
-- name: Wait 15 seconds for the Native Realm to come up
-  pause: seconds=15
-  when: manage_native_realm
-
