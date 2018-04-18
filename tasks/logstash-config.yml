@@ -85,6 +85,10 @@
   become: yes
   file: dest="{{ sysd_script }}" state=absent
 
+- name: Delete native Default Systemd service
+  become: yes
+  file: dest="/usr/lib/systemd/system/logstash.service" state=absent
+
 - name: Delete Default Configuration File
   become: yes
   file: dest=/etc/logstash/logstash.yml state=absent
@@ -108,3 +112,25 @@
 - name: Delete Default Config Dir
   become: yes
   file: dest=/etc/logstash/conf.d state=absent
+
+# Firewall configuration
+- name: Firewall NEW connections
+  iptables:
+    chain: INPUT
+    action: insert
+    protocol: tcp
+    ctstate: NEW
+    destination: "{{ ls_beats_host }}"
+    destination_port: "{{ item }}"
+    jump: ACCEPT
+  with_items:
+    - "{{ ls_beats_port | default('5601') }}"
+  notify: iptables save
+
+- name: Firewall RELATED, ESTABLISHED connections
+  iptables:
+    chain: INPUT
+    action: insert
+    ctstate: RELATED,ESTABLISHED
+    jump: ACCEPT
+  notify: iptables save

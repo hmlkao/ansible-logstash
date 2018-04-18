@@ -11,3 +11,6 @@
     - ls_restart_on_change
     - ls_start_service
   register: ls_restarted
+
+- name: iptables save
+  command: service iptables save

@@ -86,7 +86,7 @@ The first instance "devel" will listen only on localhost and uses files devel*.c
 The second instance "testing" will listen on all interfaces with X-pack disabled and uses only testing*.conf for plugin configuration.
 
 ## Role variables
-`elastic_version`         (5.6.5) Version of Logstash which will be installed
+`elastic_version`         () Version of Logstash which will be installed, if not set the latest version will be installed
 
 `ls_config`               ({}) Variables from [Logstash configuration](https://www.elastic.co/guide/en/logstash/current/logstash-settings-file.html) (Paths path.data, path.config and path.logs should not be set, these are generated per instance - path.data can be affected by `ls_data_dir`)
 

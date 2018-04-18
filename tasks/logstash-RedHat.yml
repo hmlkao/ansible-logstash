@@ -13,15 +13,18 @@
   import_tasks: logstash-RedHat-version-lock.yml
   when: ls_version_lock
 
+###
+# 'until' loop works weird in ansible 2.5.0, it reports failed even if package was successfully installed/upgraded
+###
 - name: RedHat - Install Logstash
   become: yes
-  yum: name=logstash{% if ls_version is defined and ls_version != ""  %}-{{ ls_version }}{% endif %} state=present update_cache=yes
+  yum: name=logstash{% if elastic_version is defined and elastic_version != ""  %}-{{ elastic_version }}{% endif %} state=present update_cache=yes
   when: ls_use_repository
   register: redhat_logstash_install_from_repo
   notify: restart logstash
-  until: '"failed" not in redhat_logstash_install_from_repo'
-  retries: 5
-  delay: 10
+  #until: redhat_logstash_install_from_repo.rc == 0
+  #retries: 5
+  #delay: 10
 
 - name: RedHat - Install Logstash from url
   become: yes
