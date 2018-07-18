@@ -7,9 +7,9 @@ Ansible role for manage 6.x Logstash
 
 ## Role variables
 ```
-ls_config               These values will be passed to logstash.yml; Default: {path.data: /var/lib/logstash, path.logs: /var/log/logstash}
-ls_jvm_options          Values which will be passed to jvm.options; Default: {-Xms1g, -Xmx1g}
-
+ls_config                      These values will be passed to logstash.yml; Default: {path.data: /var/lib/logstash, path.logs: /var/log/logstash}
+ls_jvm_options                 Values which will be passed to jvm.options; Default: {-Xms1g, -Xmx1g}
+ls_custom_patterns_fileblob    Files with custom patterns, if not set patterns dir will be not set; Default: empty
 ```
 
 ## Tested environment
