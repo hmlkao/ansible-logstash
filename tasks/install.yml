@@ -1,0 +1,19 @@
+---
+- import_tasks: java.yml
+  tags:
+    - java
+
+- name: add Elastic repo
+  become: yes
+  template:
+    src: elastic.repo
+    dest: /etc/yum.repos.d/elastic-{{ elastic_major_version }}.repo
+
+- set_fact: ls_state="present"
+
+- set_fact: ls_state="latest"
+  when: ls_update == true
+
+- name: install Logstash
+  become: yes
+  yum: name={{ ls_pkg_name }} state={{ ls_state }}

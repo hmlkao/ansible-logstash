@@ -1,0 +1,40 @@
+---
+- name: copy Logstash configuration
+  become: yes
+  template:
+    src: logstash.yml
+    dest: "{{ ls_conf_dir }}/logstash.yml"
+  notify: restart logstash
+
+- name: copy Java options
+  become: yes
+  template:
+    src: jvm.options
+    dest: "{{ ls_conf_dir }}/jvm.options"
+  notify: restart logstash
+
+- name: ensure patterns dir exist
+  become: yes
+  file:
+    path: "{{ ls_patterns_dir }}"
+    state: directory
+  when: ls_custom_patterns is defined
+
+- name: copy custom grok patterns
+  become: yes
+  copy:
+    src: "{{ item }}"
+    dest: "{{ ls_patterns_dir }}/{{ item | basename }}"
+  with_fileglob:
+    - "{{ ls_custom_patterns }}"
+  notify: restart logstash
+  when: ls_custom_patterns is defined
+
+- name: copy filter configurations
+  become: yes
+  template:
+    src: "{{ item }}"
+    dest: "{{ confd_dir }}/{{ item | basename | regex_replace('\\.j2','') }}"
+  with_fileglob:
+    - "{{ ls_filters }}"
+  notify: restart logstash

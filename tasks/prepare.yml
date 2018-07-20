@@ -1,0 +1,30 @@
+---
+# ---
+
+- name: check supported OS
+  fail:
+    msg: "The system {{ ansible_os_family }} is not supported"
+  when: ansible_os_family != "RedHat"
+
+- set_fact:
+    ls_config: "{{ default_ls_config }}"
+  when: ls_config is not defined
+
+- set_fact:
+    ls_config: "{{ default_ls_config | combine(ls_config) }}"
+  when: ls_config is defined
+
+- set_fact:
+    confd_dir: "{{ ls_conf_dir }}/conf.d"
+
+- fail:
+    msg: "path.data must be defined"
+  when: "'path.data' not in ls_config"
+
+- fail:
+    msg: "path.logs must be defined"
+  when: "'path.logs' not in ls_config"
+
+- fail:
+    msg: "ls_heap_size must be defined"
+  when: ls_heap_size is not defined or ls_heap_size == ''

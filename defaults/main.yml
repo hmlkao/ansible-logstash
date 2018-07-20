@@ -1,0 +1,9 @@
+---
+ls_update: false
+java_update: false
+default_ls_config:
+  path.data: "/var/lib/logstash"
+  path.logs: "/var/log/logstash"
+ls_heap_size: 1g
+ls_restart_on_change: true
+ls_patterns_dir: "{{ ls_conf_dir }}/patterns"
