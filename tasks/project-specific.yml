@@ -1,17 +1,4 @@
 ---
-- name: copy Logstash configuration
-  become: yes
-  template:
-    src: logstash.yml
-    dest: "{{ ls_conf_dir }}/logstash.yml"
-  notify: restart logstash
-
-- name: copy Java options
-  become: yes
-  template:
-    src: jvm.options
-    dest: "{{ ls_conf_dir }}/jvm.options"
-  notify: restart logstash
 
 - name: ensure patterns dir exist
   become: yes

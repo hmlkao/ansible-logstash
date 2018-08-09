@@ -1,8 +1,11 @@
+# Contain variables used in role but which shouldn't be changed by user
 ---
+project: logstash
 elastic_major_version: 6.x
 java: java-1.8.0-openjdk.x86_64
 elastic_gpg_key: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
-ls_conf_dir: /etc/logstash
-ls_pkg_name: logstash
-ls_user: logstash
-ls_group: logstash
+ls_conf_dir: /etc/{{ project }}
+ls_pkg_name: "{{ project }}"
+ls_service_name: "{{ project }}"
+ls_user: "{{ project }}"
+ls_group: "{{ project }}"

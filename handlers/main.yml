@@ -4,8 +4,8 @@
   become: yes
   command: systemctl daemon-reload
 
-- name: restart logstash
+- name: restart {{ project }}
   become: yes
-  service: name=logstash state=restarted enabled=yes
+  service: name={{ service_name }} state=restarted enabled=yes
   when:
-    - ls_restart_on_change
+    - restart_on_change

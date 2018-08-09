@@ -1,5 +1,6 @@
 ---
 # ---
+- import_tasks: variables.yml
 
 - name: check supported OS
   fail:
@@ -7,27 +8,26 @@
   when: ansible_os_family != "RedHat"
 
 - set_fact:
-    ls_config: "{{ default_ls_config }}"
-  when: ls_config is not defined
+    config: "{{ default_config }}"
+  when: config is not defined
 
 - set_fact:
-    ls_config: "{{ default_ls_config | combine(ls_config) }}"
-  when: ls_config is defined
+    config: "{{ default_config | combine(config) }}"
+  when: config is defined
 
-- set_fact:
-    confd_dir: "{{ ls_conf_dir }}/conf.d"
+- set_fact: confd_dir="{{ conf_dir }}/conf.d"
 
-- name: Check path.data
+- name: check path.data
   fail:
     msg: "path.data must be defined"
-  when: "'path.data' not in ls_config"
+  when: "'path.data' not in config"
 
-- name: Check path.logs
+- name: check path.logs
   fail:
     msg: "path.logs must be defined"
-  when: "'path.logs' not in ls_config"
+  when: "'path.logs' not in config"
 
-- name: Check heap size
+- name: check heap size
   fail:
-    msg: "ls_heap_size must be defined"
-  when: ls_heap_size is not defined or ls_heap_size == ''
+    msg: "heap_size must be defined"
+  when: heap_size is not defined or heap_size == ''

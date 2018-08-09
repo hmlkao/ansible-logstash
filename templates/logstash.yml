@@ -245,4 +245,4 @@
 #xpack.management.elasticsearch.sniffing: false
 #xpack.management.logstash.poll_interval: 5s
 
-{{ ls_config | to_nice_yaml }}
+{{ config | to_nice_yaml }}

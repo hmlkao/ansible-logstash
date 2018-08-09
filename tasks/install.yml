@@ -9,11 +9,16 @@
     src: elastic.repo
     dest: /etc/yum.repos.d/elastic-{{ elastic_major_version }}.repo
 
-- set_fact: ls_state="present"
+- set_fact: service_state="present"
 
-- set_fact: ls_state="latest"
-  when: ls_update == true
+- set_fact: service_state="latest"
+  when: pkg_update == true
 
-- name: install Logstash
+- set_fact: pkg_name={{ pkg_name }}-{{ version }}
+  when: version is defined and version != "" and pkg_update == false
+
+- name: install {{ project | title }}
   become: yes
-  yum: name={{ ls_pkg_name }} state={{ ls_state }}
+  yum: name={{ pkg_name }} state={{ service_state }}
+  register: installed
+  notify: restart {{ project }}

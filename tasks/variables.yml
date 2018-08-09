@@ -1,0 +1,27 @@
+# This should be only place where are used variables with prefix
+# It facilitate sharing code between projects
+---
+
+- set_fact: version={{ ls_version }}
+  when: ls_version is defined
+
+- set_fact: config={{ ls_config }}
+  when: ls_config is defined
+
+- set_fact: pkg_name={{ ls_pkg_name }}
+  when: ls_pkg_name is defined
+
+- set_fact: pkg_update={{ ls_update }}
+  when: ls_update is defined
+
+- set_fact: restart_on_change={{ ls_restart_on_change }}
+  when: ls_restart_on_change is defined
+
+- set_fact: service_name={{ ls_service_name }}
+  when: ls_service_name is defined
+
+- set_fact: conf_dir={{ ls_conf_dir }}
+  when: ls_conf_dir is defined
+
+- set_fact: heap_size={{ ls_heap_size }}
+  when: ls_heap_size is defined
