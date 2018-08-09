@@ -17,14 +17,17 @@
 - set_fact:
     confd_dir: "{{ ls_conf_dir }}/conf.d"
 
-- fail:
+- name: Check path.data
+  fail:
     msg: "path.data must be defined"
   when: "'path.data' not in ls_config"
 
-- fail:
+- name: Check path.logs
+  fail:
     msg: "path.logs must be defined"
   when: "'path.logs' not in ls_config"
 
-- fail:
+- name: Check heap size
+  fail:
     msg: "ls_heap_size must be defined"
   when: ls_heap_size is not defined or ls_heap_size == ''

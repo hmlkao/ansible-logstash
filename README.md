@@ -13,9 +13,8 @@ Ansible role for manage 6.x Logstash
 ls_filters                      (REQUIRED) Fileglob with filter configuration templates, at least one file must match
 ls_config                       These values will be passed to logstash.yml; Default: {path.data: /var/lib/logstash, path.logs: /var/log/logstash}
 ls_heap_size                    Defines a heap size; Default: 1g
-ls_jvm_options                  Values which will be passed to jvm.options; Default: [-Xms1g, -Xmx1g]
 ls_patterns_dir                 Directory where will be patterns placed on host; Default: /etc/logstash/patterns
-ls_custom_patterns              Fileglob with custom patterns, if not set patterns dir will be not set; Default: empty
+ls_custom_patterns              Fileglob with custom patterns; Default: empty
 ls_update                       Update Logstash to the latest version from repository; Default: false
 ls_restart_on_change            Service will be restarted when some changes appear; Default: true
 java_update                     Update Java to the latest version from repository; Default: false
