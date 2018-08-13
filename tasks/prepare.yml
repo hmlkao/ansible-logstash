@@ -31,3 +31,13 @@
   fail:
     msg: "heap_size must be defined"
   when: heap_size is not defined or heap_size == ''
+
+- name: ensure required paths exists
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ group }}"
+  with_items:
+    - "{{ config['path.data'] }}"
+    - "{{ config['path.logs'] }}"

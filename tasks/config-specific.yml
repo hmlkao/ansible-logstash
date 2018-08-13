@@ -1,27 +1,42 @@
+# Tasks specific for this project
 ---
 
-- name: ensure patterns dir exist
+- name: ensure required paths exists
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ group }}"
+  with_items:
+    - "{{ config['path.data'] }}"
+    - "{{ config['path.logs'] }}"
+
+- name: copy Java options
   become: yes
+  template:
+    src: jvm.options
+    dest: "{{ conf_dir }}/jvm.options"
+  notify: restart {{ project }}
+
+- name: ensure patterns dir exist
   file:
     path: "{{ ls_patterns_dir }}"
     state: directory
   when: ls_custom_patterns is defined
 
 - name: copy custom grok patterns
-  become: yes
   copy:
     src: "{{ item }}"
     dest: "{{ ls_patterns_dir }}/{{ item | basename }}"
   with_fileglob:
     - "{{ ls_custom_patterns }}"
-  notify: restart logstash
+  notify: restart {{ project }}
   when: ls_custom_patterns is defined
 
 - name: copy filter configurations
-  become: yes
   template:
     src: "{{ item }}"
     dest: "{{ confd_dir }}/{{ item | basename | regex_replace('\\.j2','') }}"
   with_fileglob:
     - "{{ ls_filters }}"
-  notify: restart logstash
+  notify: restart {{ project }}

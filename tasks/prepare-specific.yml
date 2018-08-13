@@ -1,0 +1,18 @@
+---
+
+- set_fact: confd_dir="{{ conf_dir }}/conf.d"
+
+- name: check path.data
+  fail:
+    msg: "path.data must be defined"
+  when: "'path.data' not in config"
+
+- name: check path.logs
+  fail:
+    msg: "path.logs must be defined"
+  when: "'path.logs' not in config"
+
+- name: check heap size
+  fail:
+    msg: "heap_size must be defined"
+  when: heap_size is not defined or heap_size == ''

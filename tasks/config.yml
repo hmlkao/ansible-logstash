@@ -6,18 +6,12 @@
     dest: "{{ conf_dir }}/{{ project }}.yml"
   notify: restart {{ project }}
 
-- name: copy Java options
-  become: yes
-  template:
-    src: jvm.options
-    dest: "{{ conf_dir }}/jvm.options"
-  notify: restart {{ project }}
-
 # Run tasks specific for the project if exists
-- stat:
-    path: project-specific.yml
-  register: project_specific_file
+- local_action: stat path={{ role_path }}/tasks/config-specific.yml
+  register: config_specific_file
 
-- import_tasks: project-specific.yml
-  when:
-    project_specific_file.stat.exists
+- import_tasks: config-specific.yml
+  when: config_specific_file.stat.exists
+
+- name: ensure service is enabled and started
+  service: name={{ service_name }} state=started enabled=yes

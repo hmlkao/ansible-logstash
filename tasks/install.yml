@@ -21,4 +21,4 @@
   become: yes
   yum: name={{ pkg_name }} state={{ service_state }}
   register: installed
-  notify: restart {{ project }}
+  notify: reload systemd configuration

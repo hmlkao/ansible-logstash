@@ -25,3 +25,9 @@
 
 - set_fact: heap_size={{ ls_heap_size }}
   when: ls_heap_size is defined
+
+- set_fact: user={{ ls_user }}
+  when: ls_user is defined
+
+- set_fact: group={{ ls_group }}
+  when: ls_group is defined
