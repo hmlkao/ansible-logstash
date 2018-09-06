@@ -56,4 +56,5 @@ This configuration only set the heap size, any other required variables are take
 ```
 
 ## TODO
-- Create a tests
+ - Create a tests
+ - Make handlers more independent on project

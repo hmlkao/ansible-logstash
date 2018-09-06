@@ -15,29 +15,9 @@
     config: "{{ default_config | combine(config) }}"
   when: config is defined
 
-- set_fact: confd_dir="{{ conf_dir }}/conf.d"
+# Run tasks specific for the project if exists
+- local_action: stat path={{ role_path }}/tasks/prepare-specific.yml
+  register: prepare_specific_file
 
-- name: check path.data
-  fail:
-    msg: "path.data must be defined"
-  when: "'path.data' not in config"
-
-- name: check path.logs
-  fail:
-    msg: "path.logs must be defined"
-  when: "'path.logs' not in config"
-
-- name: check heap size
-  fail:
-    msg: "heap_size must be defined"
-  when: heap_size is not defined or heap_size == ''
-
-- name: ensure required paths exists
-  file:
-    path: "{{ item }}"
-    state: directory
-    owner: "{{ user }}"
-    group: "{{ group }}"
-  with_items:
-    - "{{ config['path.data'] }}"
-    - "{{ config['path.logs'] }}"
+- import_tasks: prepare-specific.yml
+  when: prepare_specific_file.stat.exists
